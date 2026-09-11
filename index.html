@@ -1,466 +1,460 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>ANSH PRAJAPATI LUDO</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#111827,#312e81);color:white;min-height:100vh}
-.app{max-width:560px;margin:auto;padding:12px}
-h1{text-align:center;margin:5px 0;font-size:27px}
-.sub{text-align:center;color:#cbd5e1;margin-bottom:12px}
-.panel{background:#ffffff12;border:1px solid #ffffff25;border-radius:18px;padding:12px;margin-bottom:12px}
-.controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-button,select{border:0;border-radius:12px;padding:11px 14px;font-weight:bold;font-size:14px}
-button{cursor:pointer}.new{background:#22c55e;color:white}
-.dice{background:#facc15;color:#111827;font-size:20px}
-.info{text-align:center;margin:10px 0}
-.status{text-align:center;background:#0005;border-radius:12px;padding:10px;min-height:42px}
-#board{width:min(94vw,520px);aspect-ratio:1;margin:auto;background:#f8fafc;border:6px solid #111827;border-radius:16px;position:relative;overflow:hidden}
-.grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(15,1fr);grid-template-rows:repeat(15,1fr)}
-.cell{border:1px solid #cbd5e1;background:#e2e8f0;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:12px}
-.path{background:white}.safe{background:#dbeafe}
-.redhome{background:#fecaca}.bluehome{background:#bfdbfe}
-.center{background:linear-gradient(135deg,#ef4444 50%,#3b82f6 50%)}
-.token{position:absolute;width:8%;aspect-ratio:1;border-radius:50%;border:3px solid white;box-shadow:0 3px 8px #0009;z-index:5;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;cursor:pointer}
-.red{background:#ef4444}.blue{background:#3b82f6}
-.can{outline:4px solid #facc15;animation:pulse .8s infinite}
-@keyframes pulse{50%{transform:translate(-50%,-50%) scale(1.15)}}
-.footer{text-align:center;color:#cbd5e1;font-size:12px;margin-top:10px}
+body{
+ margin:0;background:linear-gradient(135deg,#10152b,#202b55);
+ color:white;font-family:Arial,sans-serif;text-align:center;
+ min-height:100vh;padding:12px
+}
+h1{margin:8px 0 2px;font-size:28px}
+.sub{opacity:.8;margin-bottom:10px}
+.panel{
+ max-width:700px;margin:auto;background:#151b35;border-radius:18px;
+ padding:12px;box-shadow:0 10px 35px #0008
+}
+select,button{
+ border:0;border-radius:12px;padding:11px 14px;margin:4px;
+ font-weight:bold;font-size:15px
+}
+button{background:#ffd43b;color:#171717;cursor:pointer}
+button:active{transform:scale(.96)}
+#board{
+ width:min(94vw,620px);aspect-ratio:1;margin:14px auto;
+ display:grid;grid-template-columns:repeat(15,1fr);
+ grid-template-rows:repeat(15,1fr);
+ background:#eee;border:5px solid #111;border-radius:14px;
+ overflow:hidden;position:relative
+}
+.cell{border:1px solid #bbb;display:flex;align-items:center;justify-content:center}
+.red{background:#ef4444}.green{background:#22c55e}
+.yellow{background:#facc15}.blue{background:#3b82f6}
+.path{background:#fafafa}
+.safe{background:#dbeafe}
+.center{background:conic-gradient(#ef4444 0 25%,#22c55e 25% 50%,#facc15 50% 75%,#3b82f6 75%)}
+.token{
+ width:70%;height:70%;border-radius:50%;border:3px solid white;
+ box-shadow:0 2px 5px #0008;z-index:4
+}
+.t-red{background:#b91c1c}.t-green{background:#15803d}
+.t-yellow{background:#ca8a04}.t-blue{background:#1d4ed8}
+.home{
+ position:absolute;width:27%;height:27%;border-radius:15px;
+ padding:7px;display:grid;grid-template-columns:1fr 1fr;
+ gap:7px;z-index:2
+}
+.home.red{left:3%;top:3%}.home.green{right:3%;top:3%}
+.home.yellow{left:3%;bottom:3%}.home.blue{right:3%;bottom:3%}
+.home .token{width:100%;height:100%}
+#status{font-size:18px;font-weight:bold;margin:7px}
+#dice{
+ font-size:52px;background:#fff;color:#111;border-radius:18px;
+ width:85px;height:85px;margin:8px auto;display:flex;
+ justify-content:center;align-items:center;box-shadow:0 5px 15px #0007
+}
+.turn{padding:7px;border-radius:10px;background:#ffffff18}
+.small{font-size:13px;opacity:.75}
+#winner{font-size:25px;font-weight:bold}
 </style>
 </head>
 
 <body>
-<div class="app">
-
 <h1>🎲 ANSH PRAJAPATI LUDO</h1>
-<div class="sub">👤 Ansh Prajapati vs 🤖 Computer AI</div>
+<div class="sub">Original Offline Ludo • Play with Friends & Computer</div>
 
 <div class="panel">
-<div class="controls">
+  <div>
+    <select id="mode">
+      <option value="ai">👤 Player + 🤖 Computer</option>
+      <option value="friends">👥 Friends Offline</option>
+      <option value="mix">🤝 Friends + Computer</option>
+    </select>
 
-<select id="level">
-<option value="easy">Easy: AI</option>
-<option value="medium" selected>Medium: AI</option>
-<option value="hard">Hard: AI</option>
-</select>
+    <select id="players">
+      <option value="2">2 Players</option>
+      <option value="3">3 Players</option>
+      <option value="4" selected>4 Players</option>
+    </select>
 
-<button class="dice" id="roll" onclick="roll()">🎲 Roll</button>
-<button class="new" onclick="newGame()">🔄 New Game</button>
+    <select id="difficulty">
+      <option value="easy">Easy AI</option>
+      <option value="medium" selected>Medium AI</option>
+      <option value="hard">Hard AI</option>
+    </select>
+  </div>
 
-</div>
+  <button onclick="newGame()">🔄 New Game</button>
+  <div id="status" class="turn">Game starting...</div>
+  <div id="dice">⚀</div>
+  <button onclick="rollDice()">🎲 ROLL DICE</button>
 
-<div class="info">
-👤 Player: तुम &nbsp; | &nbsp; 🤖 Computer: AI
-</div>
-
-<div id="status" class="status">
-तुम्हारी चाल है — Dice Roll करो।
-</div>
-</div>
-
-<div id="board">
-<div class="grid" id="grid"></div>
-</div>
-
-<div class="footer">
-Made with ❤️ by Ansh Prajapati
-</div>
-
+  <div id="board"></div>
+  <div id="winner"></div>
+  <div class="small">
+    6 आने पर गोटी बाहर • Safe spots पर गोटी नहीं कटेगी • पहले सभी 4 गोटियाँ Finish करो
+  </div>
 </div>
 
 <script>
+const colors=["red","green","yellow","blue"];
+const diceFace=["⚀","⚁","⚂","⚃","⚄","⚅"];
 
-const path=[
-[6,0],[6,1],[6,2],[6,3],[6,4],
-[5,6],[4,6],[3,6],[2,6],[1,6],[0,6],
-[0,7],[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],
-[6,9],[6,10],[6,11],[6,12],[6,13],[6,14],
-[7,14],[8,14],[8,13],[8,12],[8,11],[8,10],[8,9],
-[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],
-[14,7],[14,6],[13,6],[12,6],[11,6],[10,6],[9,6],
-[8,5],[8,4],[8,3],[8,2],[8,1],[8,0],
-[7,0],[6,0]
-];
+let players=4;
+let current=0;
+let dice=0;
+let gameOver=false;
+let moving=false;
+
+let pieces={
+ red:[-1,-1,-1,-1],
+ green:[-1,-1,-1,-1],
+ yellow:[-1,-1,-1,-1],
+ blue:[-1,-1,-1,-1]
+};
+
+let active=[];
+let path=[];
+
+/* 52-square circular path */
+for(let i=0;i<52;i++) path.push(i);
+
+const start={red:0,green:13,yellow:26,blue:39};
 
 const safe=[0,8,13,21,26,34,39,47];
 
-let S,turn,d,over;
+/* create board */
+function buildBoard(){
+ const b=document.getElementById("board");
+ b.innerHTML="";
 
-function board(){
+ for(let r=0;r<15;r++){
+   for(let c=0;c<15;c++){
+     let x=document.createElement("div");
+     x.className="cell";
 
-let g=document.getElementById('grid');
-g.innerHTML='';
+     /* four home areas */
+     if(r<6&&c<6)x.classList.add("red");
+     else if(r<6&&c>8)x.classList.add("green");
+     else if(r>8&&c<6)x.classList.add("yellow");
+     else if(r>8&&c>8)x.classList.add("blue");
+     else x.classList.add("path");
 
-for(let r=0;r<15;r++)
-for(let c=0;c<15;c++){
+     if(r>=6&&r<=8&&c>=6&&c<=8)x.classList.add("center");
 
-let x=document.createElement('div');
-x.className='cell';
+     b.appendChild(x);
+   }
+ }
 
-let home=
-(r<6&&c<6)||(r<6&&c>8)||
-(r>8&&c<6)||(r>8&&c>8);
+ /* visual home tokens */
+ colors.forEach(col=>{
+   let h=document.createElement("div");
+   h.className="home "+col;
+   for(let i=0;i<4;i++){
+     let t=document.createElement("div");
+     t.className="token t-"+col;
+     t.id="home-"+col+"-"+i;
+     h.appendChild(t);
+   }
+   b.appendChild(h);
+ });
 
-if(home)
-x.classList.add(
-(r<6&&c<6)||(r>8&&c>8)
-?'redhome':'bluehome'
-);
-
-let k=path.findIndex(p=>p[0]==r&&p[1]==c);
-
-if(k>=0){
-
-x.classList.add('path');
-
-if(safe.includes(k)){
-x.classList.add('safe');
-x.textContent='★';
-}
-
-}
-
-if(r>=6&&r<=8&&c>=6&&c<=8)
-x.classList.add('center');
-
-g.appendChild(x);
-
-}
-
+ drawTokens();
 }
 
 function newGame(){
+ players=parseInt(document.getElementById("players").value);
+ current=0;dice=0;gameOver=false;moving=false;
 
-S={
-red:[-1,-1,-1,-1],
-blue:[-1,-1,-1,-1]
-};
+ pieces={
+  red:[-1,-1,-1,-1],
+  green:[-1,-1,-1,-1],
+  yellow:[-1,-1,-1,-1],
+  blue:[-1,-1,-1,-1]
+ };
 
-turn='red';
-d=0;
-over=false;
-
-msg('तुम्हारी चाल है — Dice Roll करो।');
-
-render();
-
+ active=colors.slice(0,players);
+ buildBoard();
+ updateStatus();
+ document.getElementById("winner").innerHTML="";
+ document.getElementById("dice").innerText="⚀";
 }
 
-function msg(t){
-document.getElementById('status').textContent=t;
+function playerName(i){
+ const mode=document.getElementById("mode").value;
+
+ if(mode==="ai"){
+   return i===0?"👤 ANSH PRAJAPATI":"🤖 Computer "+i;
+ }
+
+ if(mode==="friends"){
+   return "👤 Player "+(i+1);
+ }
+
+ return i<2?"👤 Friend "+(i+1):"🤖 Computer "+(i-1);
 }
 
-function moves(c,n){
-
-return S[c]
-.map((p,i)=>
-(p<0?n==6:p+n<=57)?i:-1
-)
-.filter(i=>i>=0);
-
+function updateStatus(){
+ if(gameOver)return;
+ document.getElementById("status").innerText=
+   "Turn: "+playerName(current)+" • "+active[current].toUpperCase();
 }
 
-function roll(){
-
-if(over||turn!='red'||d)return;
-
-d=1+Math.floor(Math.random()*6);
-
-let m=moves('red',d);
-
-msg(
-`🎲 तुम्हें ${d} आया। ${
-m.length
-?'पीली outline वाली गोटी चुनो।'
-:'कोई चाल नहीं।'
-}`
-);
-
-render();
-
-if(!m.length)
-setTimeout(end,600);
-
+/* Convert circular position to a rough board cell */
+function boardIndex(p){
+ let angle=(p/52)*Math.PI*2-Math.PI/2;
+ let cx=7,cy=7;
+ let radius=5.2;
+ let x=Math.round(cx+Math.cos(angle)*radius);
+ let y=Math.round(cy+Math.sin(angle)*radius);
+ return y*15+x;
 }
 
-function move(c,i,n){
+function drawTokens(){
+ document.querySelectorAll(".floatingToken").forEach(x=>x.remove());
 
-let p=S[c][i];
+ active.forEach((col,pi)=>{
+   pieces[col].forEach((pos,i)=>{
+     if(pos===-1)return;
 
-p=p<0?0:p+n;
+     let token=document.createElement("div");
+     token.className="token t-"+col+" floatingToken";
+     token.style.position="absolute";
 
-S[c][i]=p;
+     if(pos>=57){
+       token.style.left=(45+i*4)+"%";
+       token.style.top="46%";
+     }else{
+       let idx=boardIndex((start[col]+pos)%52);
+       let row=Math.floor(idx/15);
+       let c=idx%15;
+       token.style.left=(c*6.666+1.1)+"%";
+       token.style.top=(row*6.666+1.1)+"%";
+     }
 
-if(p<52){
-
-let start=c=='red'?0:26;
-
-let gp=(start+p)%52;
-
-if(!safe.includes(gp)){
-
-let e=c=='red'?'blue':'red';
-
-let es=e=='red'?0:26;
-
-S[e]=S[e].map(q=>
-q>=0&&q<52&&(es+q)%52==gp
-?-1:q
-);
-
+     token.title=col+" token "+(i+1);
+     token.onclick=()=>selectToken(pi,i);
+     document.getElementById("board").appendChild(token);
+   });
+ });
 }
 
+function rollDice(){
+ if(gameOver||moving)return;
+ if(!isHuman(current)){
+   return;
+ }
+
+ dice=Math.floor(Math.random()*6)+1;
+ document.getElementById("dice").innerText=diceFace[dice-1];
+
+ beep();
+
+ let possible=getMoves(active[current],dice);
+
+ if(possible.length===0){
+   setTimeout(nextTurn,650);
+   return;
+ }
+
+ if(possible.length===1){
+   setTimeout(()=>moveToken(current,possible[0]),400);
+ }
 }
 
-if(S[c].every(x=>x==57)){
+function getMoves(col,d){
+ let moves=[];
+ pieces[col].forEach((p,i)=>{
+   if(p>=57)return;
 
-over=true;
-
-msg(
-c=='red'
-?'🏆 Ansh Prajapati जीत गए! 🎉'
-:'🤖 Computer जीत गया!'
-);
-
+   if(p===-1){
+     if(d===6)moves.push(i);
+   }else{
+     if(p+d<=57)moves.push(i);
+   }
+ });
+ return moves;
 }
 
+function selectToken(pi,i){
+ if(gameOver||moving)return;
+ if(pi!==current)return;
+ if(!dice)return;
+
+ let col=active[pi];
+ if(!getMoves(col,dice).includes(i))return;
+
+ moveToken(pi,i);
 }
 
-function player(i){
+function moveToken(pi,i){
+ if(moving)return;
+ moving=true;
 
-if(
-turn!='red'||
-!d||
-!moves('red',d).includes(i)
-)return;
+ let col=active[pi];
+ let old=pieces[col][i];
 
-let n=d;
+ if(old===-1){
+   pieces[col][i]=0;
+ }else{
+   pieces[col][i]+=dice;
+ }
 
-move('red',i,n);
+ drawTokens();
 
-let again=n==6;
+ setTimeout(()=>{
+   capture(col,i);
+   checkWinner(col);
 
-d=0;
+   if(!gameOver){
+     if(dice===6){
+       dice=0;
+       document.getElementById("dice").innerText="⚀";
+       moving=false;
+       updateStatus();
 
-render();
-
-if(!over){
-
-if(again){
-
-msg('🎉 6 आया! फिर से Roll करो।');
-
-}
-else{
-
-end();
-
-}
-
-}
-
-}
-
-function end(){
-
-if(over)return;
-
-turn=turn=='red'?'blue':'red';
-
-render();
-
-if(turn=='red'){
-
-msg('तुम्हारी चाल है — Dice Roll करो।');
-
-}
-else{
-
-msg('🤖 Computer सोच रहा है...');
-
-setTimeout(ai,650);
-
+       if(!isHuman(current))computerTurn();
+     }else{
+       nextTurn();
+     }
+   }
+ },350);
 }
 
+function capture(col,i){
+ let p=pieces[col][i];
+ if(p<0||p>=52)return;
+
+ let global=(start[col]+p)%52;
+ if(safe.includes(global))return;
+
+ active.forEach(other=>{
+   if(other===col)return;
+
+   pieces[other].forEach((op,j)=>{
+     if(op<0||op>=52)return;
+     let og=(start[other]+op)%52;
+
+     if(og===global){
+       pieces[other][j]=-1;
+     }
+   });
+ });
 }
 
-function ai(){
-
-if(over)return;
-
-d=1+Math.floor(Math.random()*6);
-
-let m=moves('blue',d);
-
-if(!m.length){
-
-d=0;
-end();
-return;
-
+function checkWinner(col){
+ if(pieces[col].every(p=>p===57)){
+   gameOver=true;
+   document.getElementById("winner").innerText=
+     "🏆 "+playerName(active.indexOf(col))+" WINS! 🎉";
+   beep();
+ }
 }
 
-let lv=document.getElementById('level').value;
+function nextTurn(){
+ dice=0;
+ document.getElementById("dice").innerText="⚀";
+ current=(current+1)%active.length;
+ moving=false;
+ updateStatus();
 
-let best=m[0];
-let bestScore=-999999;
-
-for(let i of m){
-
-let p=S.blue[i];
-
-let np=p<0?0:p+d;
-
-let score=0;
-
-if(lv=='easy'){
-
-score=Math.random()*100;
-
+ if(!gameOver&&!isHuman(current)){
+   setTimeout(computerTurn,600);
+ }
 }
 
-else{
+function isHuman(i){
+ let mode=document.getElementById("mode").value;
 
-score=np;
+ if(mode==="ai")return i===0;
+ if(mode==="friends")return true;
 
-if(p<0)score+=25;
-
-if(np==57)score+=120;
-
-if(safe.includes((26+np)%52))
-score+=10;
-
-let target=(26+np)%52;
-
-if(
-S.red.some(r=>
-r>=0&&r<52&&
-((r+0)%52)==((target+26)%52)
-)
-)
-score+=80;
-
-if(lv=='hard')
-score+=np*2;
-
-score+=Math.random()*20;
-
+ return i<2;
 }
 
-if(score>bestScore){
+/* AI */
+function computerTurn(){
+ if(gameOver||moving||isHuman(current))return;
 
-bestScore=score;
-best=i;
+ dice=Math.floor(Math.random()*6)+1;
+ document.getElementById("dice").innerText=diceFace[dice-1];
+ beep();
 
+ let col=active[current];
+ let moves=getMoves(col,dice);
+
+ if(!moves.length){
+   setTimeout(nextTurn,650);
+   return;
+ }
+
+ let chosen=chooseAI(col,moves);
+ setTimeout(()=>moveToken(current,chosen),650);
 }
 
+function chooseAI(col,moves){
+ let difficulty=document.getElementById("difficulty").value;
+
+ if(difficulty==="easy"){
+   return moves[Math.floor(Math.random()*moves.length)];
+ }
+
+ let best=moves[0],score=-9999;
+
+ moves.forEach(i=>{
+   let p=pieces[col][i];
+   let np=p===-1?0:p+dice;
+   let s=np;
+
+   if(dice===6)s+=20;
+   if(np===57)s+=100;
+
+   /* prefer capture */
+   let global=(start[col]+np)%52;
+   active.forEach(other=>{
+     if(other===col)return;
+     pieces[other].forEach(op=>{
+       if(op>=0&&op<52){
+         if((start[other]+op)%52===global)s+=
+           difficulty==="hard"?80:40;
+       }
+     });
+   });
+
+   /* hard AI avoids unsafe positions */
+   if(difficulty==="hard"&&!safe.includes(global))s+=5;
+
+   if(s>score){
+     score=s;
+     best=i;
+   }
+ });
+
+ return best;
 }
 
-let n=d;
-
-move('blue',best,n);
-
-let again=n==6;
-
-d=0;
-
-render();
-
-if(!over){
-
-if(again){
-
-setTimeout(ai,600);
-
-}
-else{
-
-turn='red';
-
-msg('तुम्हारी चाल है — Dice Roll करो।');
-
-render();
-
+/* simple sound */
+function beep(){
+ try{
+   let ctx=new (window.AudioContext||window.webkitAudioContext)();
+   let o=ctx.createOscillator();
+   let g=ctx.createGain();
+   o.connect(g);g.connect(ctx.destination);
+   o.frequency.value=500;
+   g.gain.value=.08;
+   o.start();
+   o.stop(ctx.currentTime+.12);
+ }catch(e){}
 }
 
-}
+document.getElementById("mode").addEventListener("change",newGame);
+document.getElementById("players").addEventListener("change",newGame);
+document.getElementById("difficulty").addEventListener("change",newGame);
 
-}
-
-function pos(c,p,i){
-
-if(p<0){
-
-return c=='red'
-?[[2,2],[2,4],[4,2],[4,4]][i]
-:[[2,10],[2,12],[4,10],[4,12]][i];
-
-}
-
-if(p==57){
-
-return [7,7];
-
-}
-
-return path[((c=='red'?0:26)+p)%52];
-
-}
-
-function render(){
-
-document
-.querySelectorAll('.token')
-.forEach(x=>x.remove());
-
-for(let c of ['red','blue']){
-
-S[c].forEach((p,i)=>{
-
-let t=document.createElement('div');
-
-t.className='token '+c;
-
-t.textContent=i+1;
-
-let q=pos(c,p,i);
-
-t.style.left=((q[1]+.5)/15*100)+'%';
-
-t.style.top=((q[0]+.5)/15*100)+'%';
-
-t.style.transform='translate(-50%,-50%)';
-
-if(
-c=='red'&&
-turn=='red'&&
-d&&
-moves('red',d).includes(i)
-)
-t.classList.add('can');
-
-if(c=='red')
-t.onclick=()=>player(i);
-
-document
-.getElementById('board')
-.appendChild(t);
-
-});
-
-}
-
-document.getElementById('roll').disabled=
-over||turn!='red'||!!d;
-
-}
-
-board();
 newGame();
-
 </script>
-
 </body>
 </html>
