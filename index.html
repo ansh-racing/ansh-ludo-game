@@ -2,433 +2,498 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ANSH PRAJAPATI LUDO</title>
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;background:linear-gradient(135deg,#10152b,#202b55);
- color:white;font-family:Arial,sans-serif;text-align:center;
- min-height:100vh;padding:12px
+margin:0;background:#10131c;color:#fff;font-family:Arial,sans-serif;
+display:flex;justify-content:center;min-height:100vh;padding:12px
 }
-h1{margin:8px 0 2px;font-size:28px}
-.sub{opacity:.8;margin-bottom:10px}
-.panel{
- max-width:700px;margin:auto;background:#151b35;border-radius:18px;
- padding:12px;box-shadow:0 10px 35px #0008
+.app{width:100%;max-width:620px;text-align:center}
+h1{margin:5px 0;font-size:27px}
+.brand{color:#ffd43b;font-weight:bold;margin-bottom:8px}
+.menu,.gamebar{
+background:#191e2b;border-radius:16px;padding:10px;margin-bottom:10px
 }
 select,button{
- border:0;border-radius:12px;padding:11px 14px;margin:4px;
- font-weight:bold;font-size:15px
+border:0;border-radius:10px;padding:11px;margin:3px;
+font-weight:bold;font-size:14px
 }
-button{background:#ffd43b;color:#171717;cursor:pointer}
-button:active{transform:scale(.96)}
+button{background:#ffd43b;color:#111}
 #board{
- width:min(94vw,620px);aspect-ratio:1;margin:14px auto;
- display:grid;grid-template-columns:repeat(15,1fr);
- grid-template-rows:repeat(15,1fr);
- background:#eee;border:5px solid #111;border-radius:14px;
- overflow:hidden;position:relative
+width:min(96vw,590px);height:min(96vw,590px);margin:auto;
+display:grid;grid-template-columns:repeat(15,1fr);
+grid-template-rows:repeat(15,1fr);
+background:#fff;border:5px solid #111;border-radius:12px;
+overflow:hidden;position:relative
 }
-.cell{border:1px solid #bbb;display:flex;align-items:center;justify-content:center}
-.red{background:#ef4444}.green{background:#22c55e}
-.yellow{background:#facc15}.blue{background:#3b82f6}
-.path{background:#fafafa}
-.safe{background:#dbeafe}
-.center{background:conic-gradient(#ef4444 0 25%,#22c55e 25% 50%,#facc15 50% 75%,#3b82f6 75%)}
+.cell{border:1px solid #bbb;position:relative}
+.path{background:#fff}
+.red{background:#ed3b3b}
+.green{background:#20b45b}
+.yellow{background:#ffd329}
+.blue{background:#3985ed}
+.homeArea{position:absolute;width:40%;height:40%;padding:7%;
+display:grid;grid-template-columns:1fr 1fr;gap:9%;z-index:3}
+.homeArea.red{left:0;top:0;background:#ed3b3b}
+.homeArea.green{right:0;top:0;background:#20b45b}
+.homeArea.yellow{left:0;bottom:0;background:#ffd329}
+.homeArea.blue{right:0;bottom:0;background:#3985ed}
+.base{
+background:#fff;border-radius:14%;display:flex;
+align-items:center;justify-content:center;
+box-shadow:0 2px 4px #0005
+}
 .token{
- width:70%;height:70%;border-radius:50%;border:3px solid white;
- box-shadow:0 2px 5px #0008;z-index:4
+width:70%;height:70%;border-radius:50%;
+border:3px solid #fff;box-shadow:0 3px 5px #0008;
+cursor:pointer;position:absolute;z-index:10;
+transition:.25s
 }
-.t-red{background:#b91c1c}.t-green{background:#15803d}
-.t-yellow{background:#ca8a04}.t-blue{background:#1d4ed8}
-.home{
- position:absolute;width:27%;height:27%;border-radius:15px;
- padding:7px;display:grid;grid-template-columns:1fr 1fr;
- gap:7px;z-index:2
+.tred{background:#b81717}.tgreen{background:#087d35}
+.tyellow{background:#c59a00}.tblue{background:#1452ae}
+.center{
+position:absolute;left:40%;top:40%;width:20%;height:20%;
+background:conic-gradient(#ed3b3b 0 25%,#20b45b 25% 50%,
+#ffd329 50% 75%,#3985ed 75%);
+z-index:4
 }
-.home.red{left:3%;top:3%}.home.green{right:3%;top:3%}
-.home.yellow{left:3%;bottom:3%}.home.blue{right:3%;bottom:3%}
-.home .token{width:100%;height:100%}
-#status{font-size:18px;font-weight:bold;margin:7px}
-#dice{
- font-size:52px;background:#fff;color:#111;border-radius:18px;
- width:85px;height:85px;margin:8px auto;display:flex;
- justify-content:center;align-items:center;box-shadow:0 5px 15px #0007
+.status{font-weight:bold;font-size:16px}
+.dice{
+font-size:48px;background:white;color:#111;border-radius:14px;
+width:75px;height:70px;display:flex;align-items:center;
+justify-content:center;margin:5px auto
 }
-.turn{padding:7px;border-radius:10px;background:#ffffff18}
-.small{font-size:13px;opacity:.75}
-#winner{font-size:25px;font-weight:bold}
+#msg{min-height:22px;color:#ffd43b;font-weight:bold}
+#win{font-size:24px;font-weight:bold;margin:8px}
+.safe:after{content:"★";position:absolute;inset:0;
+display:flex;align-items:center;justify-content:center;color:#555}
+@media(max-width:400px){
+h1{font-size:22px}
+select,button{font-size:12px;padding:9px 8px}
+}
 </style>
 </head>
 
 <body>
+<div class="app">
+
 <h1>🎲 ANSH PRAJAPATI LUDO</h1>
-<div class="sub">Original Offline Ludo • Play with Friends & Computer</div>
+<div class="brand">⭐ ORIGINAL LUDO • OFFLINE PLAY</div>
 
-<div class="panel">
-  <div>
-    <select id="mode">
-      <option value="ai">👤 Player + 🤖 Computer</option>
-      <option value="friends">👥 Friends Offline</option>
-      <option value="mix">🤝 Friends + Computer</option>
-    </select>
+<div class="menu">
+<select id="mode">
+<option value="ai">👤 ANSH vs 🤖 COMPUTER</option>
+<option value="friends">👥 FRIENDS OFFLINE</option>
+<option value="mix">🤝 FRIENDS + COMPUTER</option>
+</select>
 
-    <select id="players">
-      <option value="2">2 Players</option>
-      <option value="3">3 Players</option>
-      <option value="4" selected>4 Players</option>
-    </select>
+<select id="count">
+<option value="2">2 PLAYERS</option>
+<option value="3">3 PLAYERS</option>
+<option value="4" selected>4 PLAYERS</option>
+</select>
 
-    <select id="difficulty">
-      <option value="easy">Easy AI</option>
-      <option value="medium" selected>Medium AI</option>
-      <option value="hard">Hard AI</option>
-    </select>
-  </div>
+<select id="level">
+<option value="easy">AI EASY</option>
+<option value="medium" selected>AI MEDIUM</option>
+<option value="hard">AI HARD</option>
+</select>
 
-  <button onclick="newGame()">🔄 New Game</button>
-  <div id="status" class="turn">Game starting...</div>
-  <div id="dice">⚀</div>
-  <button onclick="rollDice()">🎲 ROLL DICE</button>
+<br>
+<button onclick="newGame()">🔄 NEW GAME</button>
+</div>
 
-  <div id="board"></div>
-  <div id="winner"></div>
-  <div class="small">
-    6 आने पर गोटी बाहर • Safe spots पर गोटी नहीं कटेगी • पहले सभी 4 गोटियाँ Finish करो
-  </div>
+<div class="gamebar">
+<div id="turn" class="status">ANSH PRAJAPATI की बारी</div>
+<div id="dice" class="dice">⚀</div>
+<button id="roll" onclick="roll()">🎲 ROLL DICE</button>
+<div id="msg"></div>
+</div>
+
+<div id="board"></div>
+<div id="win"></div>
+
 </div>
 
 <script>
-const colors=["red","green","yellow","blue"];
-const diceFace=["⚀","⚁","⚂","⚃","⚄","⚅"];
+const C=["red","green","yellow","blue"];
+const emoji={red:"🔴",green:"🟢",yellow:"🟡",blue:"🔵"};
 
-let players=4;
-let current=0;
-let dice=0;
-let gameOver=false;
-let moving=false;
+let n=4,current=0,dice=0,busy=false,gameOver=false;
+let pieces={red:[-1,-1,-1,-1],green:[-1,-1,-1,-1],
+yellow:[-1,-1,-1,-1],blue:[-1,-1,-1,-1]};
 
-let pieces={
+/*
+  52 common path coordinates.
+  Board is 15 x 15.
+*/
+const route=[
+[6,1],[6,2],[6,3],[6,4],[6,5],
+[5,6],[4,6],[3,6],[2,6],[1,6],
+[0,6],[0,7],[0,8],
+[1,8],[2,8],[3,8],[4,8],[5,8],
+[6,9],[6,10],[6,11],[6,12],[6,13],[6,14],
+[7,14],[8,14],
+[8,13],[8,12],[8,11],[8,10],[8,9],
+[9,8],[10,8],[11,8],[12,8],[13,8],
+[14,8],[14,7],[14,6],
+[13,6],[12,6],[11,6],[10,6],[9,6],
+[8,5],[8,4],[8,3],[8,2],[8,1],
+[8,0],[7,0],[6,0]
+];
+
+/* starting indexes */
+const START={red:0,green:13,yellow:26,blue:39};
+
+/* safe squares */
+const SAFE=[0,8,13,21,26,34,39,47];
+
+function names(){
+ let mode=document.getElementById("mode").value;
+ let a=[];
+ for(let i=0;i<n;i++){
+   if(mode==="ai")
+     a.push(i===0?"👤 ANSH PRAJAPATI":"🤖 COMPUTER "+i);
+   else if(mode==="friends")
+     a.push("👤 PLAYER "+(i+1));
+   else
+     a.push(i<2?"👤 FRIEND "+(i+1):"🤖 COMPUTER "+(i-1));
+ }
+ return a;
+}
+
+function human(i){
+ let m=document.getElementById("mode").value;
+ if(m==="ai")return i===0;
+ if(m==="friends")return true;
+ return i<2;
+}
+
+function newGame(){
+ n=+document.getElementById("count").value;
+ current=0;dice=0;busy=false;gameOver=false;
+
+ pieces={
  red:[-1,-1,-1,-1],
  green:[-1,-1,-1,-1],
  yellow:[-1,-1,-1,-1],
  blue:[-1,-1,-1,-1]
-};
+ };
 
-let active=[];
-let path=[];
+ document.getElementById("win").innerText="";
+ document.getElementById("msg").innerText="";
+ drawBoard();
+ update();
+}
 
-/* 52-square circular path */
-for(let i=0;i<52;i++) path.push(i);
-
-const start={red:0,green:13,yellow:26,blue:39};
-
-const safe=[0,8,13,21,26,34,39,47];
-
-/* create board */
-function buildBoard(){
- const b=document.getElementById("board");
+function drawBoard(){
+ let b=document.getElementById("board");
  b.innerHTML="";
 
  for(let r=0;r<15;r++){
    for(let c=0;c<15;c++){
-     let x=document.createElement("div");
-     x.className="cell";
+     let d=document.createElement("div");
+     d.className="cell";
 
-     /* four home areas */
-     if(r<6&&c<6)x.classList.add("red");
-     else if(r<6&&c>8)x.classList.add("green");
-     else if(r>8&&c<6)x.classList.add("yellow");
-     else if(r>8&&c>8)x.classList.add("blue");
-     else x.classList.add("path");
+     if(r<6&&c<6)d.classList.add("red");
+     else if(r<6&&c>8)d.classList.add("green");
+     else if(r>8&&c<6)d.classList.add("yellow");
+     else if(r>8&&c>8)d.classList.add("blue");
+     else d.classList.add("path");
 
-     if(r>=6&&r<=8&&c>=6&&c<=8)x.classList.add("center");
+     let idx=route.findIndex(x=>x[0]===r&&x[1]===c);
+     if(idx>=0&&SAFE.includes(idx))d.classList.add("safe");
 
-     b.appendChild(x);
+     b.appendChild(d);
    }
  }
 
- /* visual home tokens */
- colors.forEach(col=>{
+ /* central finish */
+ let cen=document.createElement("div");
+ cen.className="center";
+ b.appendChild(cen);
+
+ /* four home areas */
+ C.forEach(col=>{
    let h=document.createElement("div");
-   h.className="home "+col;
+   h.className="homeArea "+col;
+
    for(let i=0;i<4;i++){
+     let base=document.createElement("div");
+     base.className="base";
+     base.id="base-"+col+"-"+i;
+
      let t=document.createElement("div");
-     t.className="token t-"+col;
-     t.id="home-"+col+"-"+i;
-     h.appendChild(t);
+     t.className="token t"+col;
+     t.style.position="static";
+
+     base.appendChild(t);
+     h.appendChild(base);
    }
    b.appendChild(h);
  });
 
- drawTokens();
+ renderTokens();
 }
 
-function newGame(){
- players=parseInt(document.getElementById("players").value);
- current=0;dice=0;gameOver=false;moving=false;
+function renderTokens(){
+ document.querySelectorAll(".floating").forEach(x=>x.remove());
 
- pieces={
-  red:[-1,-1,-1,-1],
-  green:[-1,-1,-1,-1],
-  yellow:[-1,-1,-1,-1],
-  blue:[-1,-1,-1,-1]
- };
-
- active=colors.slice(0,players);
- buildBoard();
- updateStatus();
- document.getElementById("winner").innerHTML="";
- document.getElementById("dice").innerText="⚀";
-}
-
-function playerName(i){
- const mode=document.getElementById("mode").value;
-
- if(mode==="ai"){
-   return i===0?"👤 ANSH PRAJAPATI":"🤖 Computer "+i;
- }
-
- if(mode==="friends"){
-   return "👤 Player "+(i+1);
- }
-
- return i<2?"👤 Friend "+(i+1):"🤖 Computer "+(i-1);
-}
-
-function updateStatus(){
- if(gameOver)return;
- document.getElementById("status").innerText=
-   "Turn: "+playerName(current)+" • "+active[current].toUpperCase();
-}
-
-/* Convert circular position to a rough board cell */
-function boardIndex(p){
- let angle=(p/52)*Math.PI*2-Math.PI/2;
- let cx=7,cy=7;
- let radius=5.2;
- let x=Math.round(cx+Math.cos(angle)*radius);
- let y=Math.round(cy+Math.sin(angle)*radius);
- return y*15+x;
-}
-
-function drawTokens(){
- document.querySelectorAll(".floatingToken").forEach(x=>x.remove());
-
- active.forEach((col,pi)=>{
+ C.slice(0,n).forEach((col,pi)=>{
    pieces[col].forEach((pos,i)=>{
      if(pos===-1)return;
 
-     let token=document.createElement("div");
-     token.className="token t-"+col+" floatingToken";
-     token.style.position="absolute";
+     let t=document.createElement("div");
+     t.className="token t"+col+" floating";
+     t.dataset.player=pi;
+     t.dataset.token=i;
 
-     if(pos>=57){
-       token.style.left=(45+i*4)+"%";
-       token.style.top="46%";
+     t.onclick=()=>choose(pi,i);
+
+     if(pos>=52){
+       /* home lane / finish */
+       let lane=homeLane(col,pos);
+       t.style.left=(lane[1]*6.666+1.1)+"%";
+       t.style.top=(lane[0]*6.666+1.1)+"%";
      }else{
-       let idx=boardIndex((start[col]+pos)%52);
-       let row=Math.floor(idx/15);
-       let c=idx%15;
-       token.style.left=(c*6.666+1.1)+"%";
-       token.style.top=(row*6.666+1.1)+"%";
+       let g=(START[col]+pos)%52;
+       let q=route[g];
+       t.style.left=(q[1]*6.666+1)+"%";
+       t.style.top=(q[0]*6.666+1)+"%";
      }
 
-     token.title=col+" token "+(i+1);
-     token.onclick=()=>selectToken(pi,i);
-     document.getElementById("board").appendChild(token);
+     document.getElementById("board").appendChild(t);
    });
  });
 }
 
-function rollDice(){
- if(gameOver||moving)return;
- if(!isHuman(current)){
-   return;
- }
+function homeLane(col,p){
+ let lanes={
+ red:[[7,1],[7,2],[7,3],[7,4],[7,5]],
+ green:[[1,7],[2,7],[3,7],[4,7],[5,7]],
+ yellow:[[7,1],[7,2],[7,3],[7,4],[7,5]],
+ blue:[[13,7],[12,7],[11,7],[10,7],[9,7]]
+ };
+ let a=lanes[col];
+ return a[Math.min(4,Math.max(0,p-52))]||a[4];
+}
+
+function update(){
+ let nm=names()[current];
+ document.getElementById("turn").innerText=nm+" की बारी";
+ document.getElementById("roll").disabled=!human(current)||busy||gameOver;
+
+ if(!human(current)&&!gameOver&&!busy)
+   setTimeout(aiTurn,500);
+}
+
+function roll(){
+ if(gameOver||busy||!human(current))return;
 
  dice=Math.floor(Math.random()*6)+1;
- document.getElementById("dice").innerText=diceFace[dice-1];
+ showDice();
+ let moves=getMoves(C[current],dice);
 
- beep();
-
- let possible=getMoves(active[current],dice);
-
- if(possible.length===0){
-   setTimeout(nextTurn,650);
+ if(!moves.length){
+   document.getElementById("msg").innerText=
+     "कोई चाल नहीं है 😕";
+   setTimeout(next,850);
    return;
  }
 
- if(possible.length===1){
-   setTimeout(()=>moveToken(current,possible[0]),400);
- }
+ document.getElementById("msg").innerText=
+   moves.length>1?"अपनी गोटी चुनें 👆":"गोटी चल रही है...";
+
+ if(moves.length===1)
+   setTimeout(()=>move(current,moves[0]),350);
 }
 
 function getMoves(col,d){
- let moves=[];
- pieces[col].forEach((p,i)=>{
-   if(p>=57)return;
+ let arr=[];
 
-   if(p===-1){
-     if(d===6)moves.push(i);
-   }else{
-     if(p+d<=57)moves.push(i);
-   }
+ pieces[col].forEach((p,i)=>{
+   if(p===57)return;
+
+   if(p===-1&&d===6)arr.push(i);
+   else if(p>=0&&p+d<=57)arr.push(i);
  });
- return moves;
+
+ return arr;
 }
 
-function selectToken(pi,i){
- if(gameOver||moving)return;
- if(pi!==current)return;
- if(!dice)return;
+function choose(pi,i){
+ if(gameOver||busy||pi!==current||!dice)return;
 
- let col=active[pi];
+ let col=C[pi];
  if(!getMoves(col,dice).includes(i))return;
 
- moveToken(pi,i);
+ move(pi,i);
 }
 
-function moveToken(pi,i){
- if(moving)return;
- moving=true;
+function move(pi,i){
+ if(busy)return;
+ busy=true;
 
- let col=active[pi];
- let old=pieces[col][i];
+ let col=C[pi];
+ let p=pieces[col][i];
 
- if(old===-1){
-   pieces[col][i]=0;
- }else{
-   pieces[col][i]+=dice;
- }
+ if(p===-1)pieces[col][i]=0;
+ else pieces[col][i]+=dice;
 
- drawTokens();
+ renderTokens();
+ beep(600,.08);
 
  setTimeout(()=>{
    capture(col,i);
-   checkWinner(col);
+   renderTokens();
 
-   if(!gameOver){
-     if(dice===6){
-       dice=0;
-       document.getElementById("dice").innerText="⚀";
-       moving=false;
-       updateStatus();
+   if(checkWin(col))return;
 
-       if(!isHuman(current))computerTurn();
-     }else{
-       nextTurn();
-     }
-   }
- },350);
+   let extra=dice===6;
+   dice=0;
+   showDice();
+
+   if(extra){
+     busy=false;
+     document.getElementById("msg").innerText="🎉 6 आया! फिर से चाल";
+     update();
+   }else next();
+ },400);
 }
 
 function capture(col,i){
  let p=pieces[col][i];
  if(p<0||p>=52)return;
 
- let global=(start[col]+p)%52;
- if(safe.includes(global))return;
+ let global=(START[col]+p)%52;
 
- active.forEach(other=>{
+ if(SAFE.includes(global))return;
+
+ C.slice(0,n).forEach(other=>{
    if(other===col)return;
 
    pieces[other].forEach((op,j)=>{
      if(op<0||op>=52)return;
-     let og=(start[other]+op)%52;
+
+     let og=(START[other]+op)%52;
 
      if(og===global){
        pieces[other][j]=-1;
+       document.getElementById("msg").innerText=
+         "⚔️ "+emoji[col]+" ने "+emoji[other]+" को काट दिया!";
+       beep(250,.15);
      }
    });
  });
 }
 
-function checkWinner(col){
- if(pieces[col].every(p=>p===57)){
+function checkWin(col){
+ if(pieces[col].every(x=>x===57)){
    gameOver=true;
-   document.getElementById("winner").innerText=
-     "🏆 "+playerName(active.indexOf(col))+" WINS! 🎉";
-   beep();
+   busy=false;
+
+   let pi=C.indexOf(col);
+   document.getElementById("win").innerText=
+     "🏆 "+names()[pi]+" WINS! 🎉";
+
+   document.getElementById("msg").innerText=
+     "Congratulations! 👑";
+   return true;
  }
+ return false;
 }
 
-function nextTurn(){
+function next(){
  dice=0;
- document.getElementById("dice").innerText="⚀";
- current=(current+1)%active.length;
- moving=false;
- updateStatus();
+ showDice();
 
- if(!gameOver&&!isHuman(current)){
-   setTimeout(computerTurn,600);
- }
+ current=(current+1)%n;
+ busy=false;
+
+ document.getElementById("msg").innerText="";
+ update();
 }
 
-function isHuman(i){
- let mode=document.getElementById("mode").value;
+function aiTurn(){
+ if(gameOver||busy||human(current))return;
 
- if(mode==="ai")return i===0;
- if(mode==="friends")return true;
-
- return i<2;
-}
-
-/* AI */
-function computerTurn(){
- if(gameOver||moving||isHuman(current))return;
+ busy=true;
 
  dice=Math.floor(Math.random()*6)+1;
- document.getElementById("dice").innerText=diceFace[dice-1];
- beep();
+ showDice();
 
- let col=active[current];
+ let col=C[current];
  let moves=getMoves(col,dice);
 
  if(!moves.length){
-   setTimeout(nextTurn,650);
+   setTimeout(next,700);
    return;
  }
 
- let chosen=chooseAI(col,moves);
- setTimeout(()=>moveToken(current,chosen),650);
+ let choice=bestAI(col,moves);
+
+ setTimeout(()=>{
+   busy=false;
+   move(current,choice);
+ },700);
 }
 
-function chooseAI(col,moves){
- let difficulty=document.getElementById("difficulty").value;
+function bestAI(col,moves){
+ let level=document.getElementById("level").value;
 
- if(difficulty==="easy"){
+ if(level==="easy")
    return moves[Math.floor(Math.random()*moves.length)];
- }
 
- let best=moves[0],score=-9999;
+ let best=moves[0],bestScore=-99999;
 
  moves.forEach(i=>{
    let p=pieces[col][i];
    let np=p===-1?0:p+dice;
-   let s=np;
+   let score=np*2;
 
-   if(dice===6)s+=20;
-   if(np===57)s+=100;
+   if(dice===6)score+=20;
+   if(np===57)score+=150;
 
-   /* prefer capture */
-   let global=(start[col]+np)%52;
-   active.forEach(other=>{
-     if(other===col)return;
-     pieces[other].forEach(op=>{
-       if(op>=0&&op<52){
-         if((start[other]+op)%52===global)s+=
-           difficulty==="hard"?80:40;
-       }
+   if(np>=52)score+=35;
+
+   if(np<52){
+     let g=(START[col]+np)%52;
+
+     if(SAFE.includes(g))score+=25;
+
+     C.slice(0,n).forEach(other=>{
+       if(other===col)return;
+
+       pieces[other].forEach(op=>{
+         if(op>=0&&op<52){
+           let og=(START[other]+op)%52;
+           if(og===g)score+=
+             level==="hard"?120:70;
+         }
+       });
      });
-   });
 
-   /* hard AI avoids unsafe positions */
-   if(difficulty==="hard"&&!safe.includes(global))s+=5;
+     /* hard AI prefers not leaving a token exposed */
+     if(level==="hard"){
+       C.slice(0,n).forEach(other=>{
+         if(other===col)return;
+         pieces[other].forEach(op=>{
+           if(op>=0&&op<52){
+             let og=(START[other]+op)%52;
+             let distance=(g-og+52)%52;
+             if(distance>0&&distance<=6)score-=25;
+           }
+         });
+       });
+     }
+   }
 
-   if(s>score){
-     score=s;
+   score+=Math.random()*8;
+
+   if(score>bestScore){
+     bestScore=score;
      best=i;
    }
  });
@@ -436,23 +501,29 @@ function chooseAI(col,moves){
  return best;
 }
 
-/* simple sound */
-function beep(){
+function showDice(){
+ let f=["⚀","⚁","⚂","⚃","⚄","⚅"];
+ document.getElementById("dice").innerText=
+   dice?f[dice-1]:"⚀";
+}
+
+function beep(freq,time){
  try{
-   let ctx=new (window.AudioContext||window.webkitAudioContext)();
-   let o=ctx.createOscillator();
-   let g=ctx.createGain();
-   o.connect(g);g.connect(ctx.destination);
-   o.frequency.value=500;
-   g.gain.value=.08;
+   let A=new AudioContext();
+   let o=A.createOscillator();
+   let g=A.createGain();
+
+   o.connect(g);g.connect(A.destination);
+   o.frequency.value=freq;
+   g.gain.value=.06;
    o.start();
-   o.stop(ctx.currentTime+.12);
+   o.stop(A.currentTime+time);
  }catch(e){}
 }
 
-document.getElementById("mode").addEventListener("change",newGame);
-document.getElementById("players").addEventListener("change",newGame);
-document.getElementById("difficulty").addEventListener("change",newGame);
+document.getElementById("mode").onchange=newGame;
+document.getElementById("count").onchange=newGame;
+document.getElementById("level").onchange=newGame;
 
 newGame();
 </script>
